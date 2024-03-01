@@ -103,10 +103,15 @@ img {
 
 
 /* Style for the container */
-.container1 {
+/* .container1 {
+    
     max-width: 100%;
     margin-right: 0;
 
+} */
+.container1 {
+    display: flex;
+    flex-wrap: wrap;
 }
 
 /* Style for each row */
@@ -302,3 +307,34 @@ a {
     /* Other styles as needed */
 }
 
+.btn-wardrop button.active {
+    background-color: #000e1e; /* Adjust the color to match your design */
+    color: #fff;
+  }
+
+  .filter-section {
+    margin-top: 20px;
+}
+
+.filter-section h4 {
+    font-size: 16px;
+    margin-bottom: 8px;
+}
+
+.filter-section label {
+    display: block;
+    margin-bottom: 8px;
+}
+
+.filter-section input {
+    margin-right: 8px;
+}
+
+.wardrobe-section {
+    margin-bottom: 30px;
+}
+
+.wardrobe-section h2 {
+    font-size: 24px;
+    margin-bottom: 10px;
+}

@@ -25,20 +25,27 @@ def mywardrobe(gender):
     # Fetch data from the selected MongoDB collection based on gender
     data = list(collection.find().limit(100))
     
-    return render_template('mywardrobe.html', data=data, gender=gender)
+     # Separate items into Topwear, Bottomwear, and Footwear
+    # Separate items into Topwear, Bottomwear, and Footwear
+    topwear_data = [item for item in data if item.get('masterCategory') == 'Apparel' and item.get('subCategory') == 'Topwear'][:5]
+    bottomwear_data = [item for item in data if item.get('masterCategory') == 'Apparel' and item.get('subCategory') == 'Bottomwear'][:5]
+    footwear_data = [item for item in data if item.get('masterCategory') == 'Footwear'][:5]
 
-# @app.route('/mywardrobe')
-# # def get_wardrobe():
-# #      gender = request.args.get('gender', 'male')
-# #      user_items = list(db.wardrobe_items.find({"gender": gender}))
-# #      return jsonify(user_items)
-# def mywardrobe():
-#    # data = list(collection.find({}))
-#     # Print data for debugging
-#     #print(data)
-#     # Fetch data from MongoDB
-#     data = list(collection.find().limit(30))
-#     return render_template('mywardrobe.html', data=data)
+    return render_template('mywardrobe.html', topwear_data=topwear_data, bottomwear_data=bottomwear_data, footwear_data=footwear_data, gender=gender)
+# @app.route('/mywardrobe/<gender>/<int:topwear_items>/<int:bottomwear_items>/<int:footwear_items>')
+# def mywardrobe(gender, topwear_items, bottomwear_items, footwear_items):
+#     # Select the appropriate collection based on gender
+#     collection = male_collection if gender == 'Male' else female_collection
+
+#     # Fetch data from the selected MongoDB collection based on gender
+#     data = list(collection.find().limit(100))
+
+#     # Separate items into Topwear, Bottomwear, and Footwear
+#     topwear_data = [item for item in data if item.get('masterCategory') == 'Apparel' and item.get('subCategory') == 'Topwear'][:topwear_items]
+#     bottomwear_data = [item for item in data if item.get('masterCategory') == 'Apparel' and item.get('subCategory') == 'Bottomwear'][:bottomwear_items]
+#     footwear_data = [item for item in data if item.get('masterCategory') == 'Footwear'][:footwear_items]
+
+#     return render_template('mywardrobe.html', topwear_data=topwear_data, bottomwear_data=bottomwear_data, footwear_data=footwear_data, gender=gender, topwear_items=topwear_items, bottomwear_items=bottomwear_items, footwear_items=footwear_items)
   
 
 # Signup route
@@ -82,13 +89,6 @@ def signin():
             return 'Invalid email or password. Please try again.'
     return render_template('signin.html')
 
-# @app.route('/signup', methods=['POST'])
-# def signup():
-
-
-#     # Store user gender in local storage
-     # Default to 'male' if not provided
-#     return jsonify({'success': True, 'gender': gender})
 
 @app.route('/contact')
 def contact():
