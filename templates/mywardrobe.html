@@ -64,173 +64,197 @@
     <div class="top"><button onclick="toggleLeftContent()">
         <ion-icon name="menu-outline" class="icons"></ion-icon>
       </button></div>
-    <!-- <div class="left-content">
-      <div class="dd">
-        <div class="dropdown">
-          <button>Any Style</button>
-          <div class="content">
-            <a href="">Formal</a><br>
-            <a href="">Party</a><br>
-            <a href="">Casual</a><br>
-            <a href="">Sports</a><br>
-            <a href="">Ethnic</a><br>
-          </div>
-        </div>
-        <div class="dropdown">
-          <button>Any Weather</button>
-          <div class="content">
-            <a href="">Summer</a><br>
-            <a href="">Fall</a><br>
-            <a href="">Spring</a><br>
-            <a href="">Winter</a><br>
-          </div>
-        </div>
-        <div class="dropdown">
-          <button>Apparels</button>
-          <div class="content">
-            <a href="">Topwear</a><br>
-            <a href="">Bottomwear</a><br>
-          </div>
-        </div>
-        <div class="dropdown">
-          <button>Footwear</button>
-          <div class="content">
-            <a href="">Shoes</a><br>
-            <a href="">Sandals</a><br>
-            <a href="">Flip Flops</a><br>
-          </div>
-        </div>
-      </div>
-     
-      
-    </div> -->
-
     <div class="left-content">
-    <div class="dd">
+      <div class="dd">
         <!-- Existing dropdowns -->
-        
+
         <!-- Filter Checkboxes -->
         <div class="filter-section">
-            <h4>Filters</h4>
-            <label>
-                <input type="checkbox" name="formal"> Formal
-            </label>
-            <label>
-                <input type="checkbox" name="casual"> Casual
-            </label>
-            <label>
-                <input type="checkbox" name="party"> Party
-            </label>
-            <label>
-                <input type="checkbox" name="ethnic"> Ethnic
-            </label>
-            <label>
-                <input type="checkbox" name="sports"> Sports
-            </label>
-            <label>
-                <input type="checkbox" name="summer"> Summer
-            </label>
-            <label>
-                <input type="checkbox" name="winter"> Winter
-            </label>
-             <label>
-                <input type="checkbox" name="fall"> Fall
-            </label>
-            <label>
-                <input type="checkbox" name="spring"> Spring
-            </label>
-            </div>
+          <h4>Filters</h4>
+          <label>
+            <input type="checkbox" name="formal"> Formal
+          </label>
+          <label>
+            <input type="checkbox" name="casual"> Casual
+          </label>
+          <label>
+            <input type="checkbox" name="party"> Party
+          </label>
+          <label>
+            <input type="checkbox" name="ethnic"> Ethnic
+          </label>
+          <label>
+            <input type="checkbox" name="sports"> Sports
+          </label>
+          <label>
+            <input type="checkbox" name="summer"> Summer
+          </label>
+          <label>
+            <input type="checkbox" name="winter"> Winter
+          </label>
+          <label>
+            <input type="checkbox" name="fall"> Fall
+          </label>
+          <label>
+            <input type="checkbox" name="spring"> Spring
+          </label>
+        </div>
+      </div>
     </div>
-</div>
     <div class="right-content rin">
       <h1>Your Wardrobe</h1>
       <div class="btn-wardrop">
         {% if gender == 'male' %}
-          <button type="button" class="btn btn-primary active" disabled>Male</button>
-          <button type="button" class="btn btn-primary" disabled>Female</button>
+        <button type="button" class="btn btn-primary active" disabled>Male</button>
+        <button type="button" class="btn btn-primary" disabled>Female</button>
         {% elif gender == 'female' %}
-          <button type="button" class="btn btn-primary" disabled>Male</button>
-          <button type="button" class="btn btn-primary active" disabled>Female</button>
+        <button type="button" class="btn btn-primary" disabled>Male</button>
+        <button type="button" class="btn btn-primary active" disabled>Female</button>
         {% else %}
-          <button type="button" class="btn btn-primary" disabled>Male</button>
-          <button type="button" class="btn btn-primary" disabled>Female</button>
+        <button type="button" class="btn btn-primary" disabled>Male</button>
+        <button type="button" class="btn btn-primary" disabled>Female</button>
         {% endif %}
       </div>
-      
+
       <!-- Display Items in Three Divs -->
-    <div class="wardrobe-section" id="topwear-section">
-      <h2>Topwear</h2>
-      <div class="container1">
+      <div class="wardrobe-section" id="topwear-section">
+        <h2>Topwear</h2>
+        <div class="container1" id="topwear-container">
+          {% if topwear_data %}
           {% for item in topwear_data %}
-              <!-- Render topwear item here -->
-              <div class="item">
-                  <img src="{{ url_for('static', filename='images/' + item.id + '.jpg') }}">
-                  <p>ID: {{ item.id }}</p>
-                  <p>Product Name: {{ item.productDisplayName }}</p>
-              </div>
-          {% endfor %}
-      </div>
-      <button>Load More</button>
-  </div>
-
-  <div class="wardrobe-section" id="bottomwear-section">
-      <h2>Bottomwear</h2>
-      <div class="container1">
-          {% for item in bottomwear_data %}
-              <!-- Render bottomwear item here -->
-              <div class="item">
-                  <img src="{{ url_for('static', filename='images/' + item.id + '.jpg') }}">
-                  <p>ID: {{ item.id }}</p>
-                  <p>Product Name: {{ item.productDisplayName }}</p>
-              </div>
-          {% endfor %}
-      </div>
-      <button>Load More</button>
-  </div>
-
-  <div class="wardrobe-section" id="footwear-section">
-      <h2>Footwear</h2>
-      <div class="container1">
-          {% for item in footwear_data %}
-              <!-- Render footwear item here -->
-              <div class="item">
-                  <img src="{{ url_for('static', filename='images/' + item.id + '.jpg') }}">
-                  <p>ID: {{ item.id }}</p>
-                  <p>Product Name: {{ item.productDisplayName }}</p>
-              </div>
-          {% endfor %}
-      </div>
-      <button>Load More</button>
-  </div>
-      <!-- <div class="container1">
-        {% for item in data %}
-        {% if loop.index % 6 == 1 %}
-        <div class="row">
-          {% endif %}
           <div class="item">
             <img src="{{ url_for('static', filename='images/' + item.id + '.jpg') }}">
             <p>ID: {{ item.id }}</p>
             <p>Product Name: {{ item.productDisplayName }}</p>
           </div>
-          {% if loop.index % 6 == 0 or loop.last %}
+          {% endfor %}
+          {% else %}
+          <p>No topwear items available.</p>
+          {% endif %}
         </div>
-        {% endif %}
-        {% endfor %}
-      </div> -->
-    
+      </div>
+      <button onclick="loadMore(getGenderFromURL(), 'topwear', 2)" id="load-more-topwear">Load More Topwear</button>
+
+      <div class="wardrobe-section" id="bottomwear-section">
+        <h2>Bottomwear</h2>
+        <div class="container1" id="bottomwear-container">
+          {% if bottomwear_data %}
+          {% for item in bottomwear_data %}
+          <!-- Render bottomwear item here -->
+          <div class="item">
+            <img src="{{ url_for('static', filename='images/' + item.id + '.jpg') }}">
+            <p>ID: {{ item.id }}</p>
+            <p>Product Name: {{ item.productDisplayName }}</p>
+          </div>
+          {% endfor %}
+          {% else %}
+          <p>No bottomwear items available.</p>
+          {% endif %}
+        </div>
+      </div>
+      <button onclick="loadMore(getGenderFromURL(), 'bottomwear', 2)" id="load-more-bottomwear">Load More Bottomwear</button>
+
+      <div class="wardrobe-section" id="footwear-section">
+        <h2>Footwear</h2>
+        <div class="container1" id="footwear-container">
+          {% if footwear_data %}
+          {% for item in footwear_data %}
+          <div class="item">
+            <img src="{{ url_for('static', filename='images/' + item.id + '.jpg') }}">
+            <p>ID: {{ item.id }}</p>
+            <p>Product Name: {{ item.productDisplayName }}</p>
+          </div>
+          {% endfor %}
+          {% else %}
+          <p>No footwear items available.</p>
+          {% endif %}
+        </div>
+      </div>
+      <button onclick="loadMore(getGenderFromURL(), 'footwear', 2)" id="load-more-footwear">Load More Footwear</button>
+
     </div>
   </div>
   <script>
     function toggleLeftContent() {
-        // Get the element with the class 'left-content'
-        var leftContent = document.querySelector('.left-content');
-    
-        // Toggle the 'slider' class on the 'left-content' element
-        leftContent.classList.toggle('slider');
+      // Get the element with the class 'left-content'
+      var leftContent = document.querySelector('.left-content');
+
+      // Toggle the 'slider' class on the 'left-content' element
+      leftContent.classList.toggle('slider');
     }
-    
-    </script>
-    
+
+    function nextImage(containerId) {
+      const container = document.getElementById(containerId);
+      container.scrollLeft += container.clientWidth;
+    }
+
+  </script>
+  <script>
+    function getGenderFromURL() {
+    // Extract the gender from the URL
+    const url = window.location.href;
+    const genderMatch = url.match(/\/mywardrobe\/(male|female)/);
+
+    // Check if the gender is found in the URL
+    if (genderMatch && genderMatch[1]) {
+        return genderMatch[1].toLowerCase(); // Convert to lowercase for consistency
+    }
+
+    // Default to 'male' if gender is not found in the URL
+    return 'male';
+}
+    async function loadMore(gender, category) {
+      const containerId = `${category}-container`;
+      const container = document.getElementById(containerId);
+
+      const loadMoreButton = document.getElementById(`load-more-${category}`);
+      let nextPage = parseInt(loadMoreButton.dataset.nextPage) || 1;
+
+      // Handle the additional data as needed (e.g., append new items to the DOM)
+      const url = `/load_more/${gender}/${category}?page=${nextPage}`;
+
+      try {
+        const response = await fetch(url);
+
+        // Check if the response status is ok (status code in the range 200-299)
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
+        const responseData = await response.json();
+        const datcatg = `${category}_data`;
+        // const additionalData = responseData.datcatg;
+        console.log(responseData);
+
+
+        // Check if responseData has the expected structure
+        if (responseData && responseData[datcatg] && Array.isArray(responseData[datcatg])) {
+          const additionalData = responseData[datcatg];
+          console.log("Response data is good!");
+
+          additionalData.forEach(item => {
+            const newItem = document.createElement('div');
+            newItem.className = 'item';
+            newItem.innerHTML = `
+                       <img src="/static/images/${item.id}.jpg" alt="${item.productDisplayName}">
+                       <p>ID: ${item.id}</p>
+                       <p>Product Name: ${item.productDisplayName}</p>
+                   `;
+            container.appendChild(newItem);
+          });
+        // Update the next page parameter for subsequent requests
+        loadMoreButton.dataset.nextPage = nextPage + 1;
+
+        } else {
+          console.error('Invalid response data structure:', responseData);
+        }
+      } catch (error) {
+        console.log('Error loading more items:', error);
+      }
+    }
+  </script>
+
+
   <!-- <script src="{{ url_for('static', filename='script.js') }}"></script> -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
@@ -241,29 +265,8 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
     integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy"
     crossorigin="anonymous"></script>
-    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
-    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+  <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+  <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
 </body>
 
 </html>
-
-<!-- <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Wardrobe</title>
-</head>
-<body>
-    <h1>My Wardrobe</h1>
-
-    {% for item in data %}
-        <div class="item">
-            <p>ID: {{ item.id }}</p>
-            <p>Season: {{ item.season }}</p>
-            <p>Usage: {{ item.usage }}</p>
-
-        </div>
-    {% endfor %}
-
-</body>
-</html> -->

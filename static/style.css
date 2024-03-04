@@ -112,6 +112,11 @@ img {
 .container1 {
     display: flex;
     flex-wrap: wrap;
+    overflow: hidden;
+    max-width: 90%;
+    gap: 78px;
+    align-items: flex-start;
+    justify-content: space-between;
 }
 
 /* Style for each row */
@@ -129,6 +134,7 @@ img {
     border: 1px solid #ddd;
     padding: 10px;
     box-sizing: border-box;
+    
 }
 
 /* Clearfix to handle the last row if it has fewer than 5 items */
@@ -236,7 +242,7 @@ a {
     /* Includes padding in the element's total width and height */
 }
 
-.dropdown {
+/* .dropdown {
     display: inline-block;
 }
 
@@ -275,7 +281,7 @@ a {
 
 .dropdown a:hover {
     background-color: hsl(0, 0%, 90%);
-}
+} */
 
 .rin {
     display: flex;
@@ -337,4 +343,12 @@ a {
 .wardrobe-section h2 {
     font-size: 24px;
     margin-bottom: 10px;
+}
+
+.wardrobe-section {
+    margin-bottom: 20px;
+}
+
+.wardrobe-controls {
+    margin-top: 10px;
 }
