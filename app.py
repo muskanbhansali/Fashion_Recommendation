@@ -1,7 +1,7 @@
 import os
 from flask import Flask, render_template, request, jsonify, redirect, url_for
 from pymongo import MongoClient
-
+from bson import ObjectId
 app = Flask(__name__, static_url_path='/static')
 
 @app.route('/index')
@@ -16,13 +16,13 @@ male_collection = db['men']
 female_collection = db['women']
 collection_users = db['users']
 
-@app.route('/mywardrobe/<gender>')
-def mywardrobe(gender):
+@app.route('/mywardrobe/<gender>/<user_id>')
+def mywardrobe(gender, user_id):
     # Select the appropriate collection based on gender
     collection = male_collection if gender == 'male' else female_collection
 
     # Fetch data from the selected MongoDB collection based on gender
-    data = list(collection.find().limit(1000))
+    data = list(collection.find().limit(100))
     
     # Get the page parameter from the request, default to 1 if not provided
     page = int(request.args.get('page', 1))
@@ -43,7 +43,10 @@ def mywardrobe(gender):
     item = bottomwear_data[0] if bottomwear_data else None
     item = footwear_data[0] if footwear_data else None
 
-    return render_template('mywardrobe.html', topwear_data=topwear_data, bottomwear_data=bottomwear_data, footwear_data=footwear_data, gender=gender, item=item, page=page)
+    #fetch user information
+    user_info = collection_users.find_one({'_id': ObjectId(user_id)})
+
+    return render_template('mywardrobe.html', topwear_data=topwear_data, bottomwear_data=bottomwear_data, footwear_data=footwear_data, gender=gender, item=item, page=page, user_info=user_info)
 
 @app.route('/load_more/<gender>/<category>')
 def load_more(gender, category):
@@ -63,11 +66,6 @@ def load_more(gender, category):
     start_index = (page) * items_per_page
     end_index = start_index + items_per_page
 
-    # # Separate items into Topwear, Bottomwear, and Footwear
-    # topwear_data = [item for item in data if item.get('subCategory') == 'Topwear'][start_index:end_index]
-    # bottomwear_data = [item for item in data if item.get('masterCategory') == 'Apparel' and item.get('subCategory') == 'Bottomwear'][start_index:end_index]
-    # footwear_data = [item for item in data if item.get('masterCategory') == 'Footwear'][start_index:end_index]
-
     if category == 'topwear':
         category_data = [item for item in data if item.get('subCategory') == 'Topwear'][start_index:end_index]
     elif category == 'bottomwear':
@@ -77,20 +75,7 @@ def load_more(gender, category):
     else:
         return jsonify({'error': 'Invalid category'})
     
-    # Construct the JSON response
-    # response_data = {
-    #     'topwear_data': [
-    #         {'id': item['id'], 'productDisplayName': item['productDisplayName']} for item in topwear_data
-    #     ],
-    #     'bottomwear_data': [
-    #         {'id': item['id'], 'productDisplayName': item['productDisplayName']} for item in bottomwear_data
-    #     ],
-    #     'footwear_data': [
-    #         {'id': item['id'], 'productDisplayName': item['productDisplayName']} for item in footwear_data
-    #     ],
-    #     'next_page': page + 1
-    # }
-
+    
     response_data = {
         f'{category}_data': [
             {'id': item['id'], 'productDisplayName': item['productDisplayName']} for item in category_data
@@ -100,6 +85,65 @@ def load_more(gender, category):
 
     # Return the JSON response
     return jsonify(response_data)
+# @app.route('/selected_items/<gender>', methods=['GET','POST'])
+# def selected_items(gender):
+#     # Get the selected item IDs from the query parameters
+#     selected_ids = request.args.get('ids', '').split(',')
+
+#     # Select the appropriate collection based on gender
+#     collection = male_collection if gender == 'male' else female_collection
+
+#     # Fetch selected items from the MongoDB collection
+#     selected_items = list(collection.find({'id': {'$in': selected_ids}}))
+
+#     return render_template('selected_items.html', selected_items=selected_items, gender=gender)
+
+@app.route('/selected_items/<gender>', methods=['GET', 'POST'])
+def selected_items(gender):
+    try:
+        if request.method == 'POST':
+            # Get the selected item IDs from the request data
+            topwear_ids = request.json.get('tids', [])
+            bottomwear_ids = request.json.get('bids', [])
+            footwear_ids = request.json.get('fids', [])
+        
+
+            # Select the appropriate collection based on gender
+            collection = male_collection if gender == 'male' else female_collection
+
+            # Fetch selected items from the MongoDB collection for each category
+            topwear_items = list(collection.find({'id': {'$in': topwear_ids}}))
+            bottomwear_items = list(collection.find({'id': {'$in': bottomwear_ids}}))
+            footwear_items = list(collection.find({'id': {'$in': footwear_ids}}))
+
+            print(topwear_items)
+
+            response_data = {
+                'topwear_items': topwear_items,
+                'bottomwear_items': bottomwear_items,
+                'footwear_items': footwear_items,
+                'gender': gender
+            }
+
+            print("Response before jsonify:", response_data)
+        
+            return jsonify(response_data)
+            # return jsonify({
+            #     'topwear_items': topwear_items,
+            #     'bottomwear_items': bottomwear_items,
+            #     'footwear_items': footwear_items,
+            #     'gender': gender
+            # })
+    except Exception as e:
+        # Log the error for debugging purposes
+        print(f"Error fetching selected items: {e}")
+
+        # Return a JSON response indicating an error
+        return jsonify({'error': 'Error fetching selected items'}), 500
+
+    return render_template('selected_items.html', gender=gender)
+
+
 
 # Signup route
 @app.route('/signup', methods=['GET','POST'])
@@ -138,7 +182,8 @@ def signin():
         if men_user or women_user:
             # Redirect to the mywardrobe page with the user's gender
             gender = men_user['gender'] if men_user else women_user['gender']
-            return redirect(url_for('mywardrobe', gender=gender))
+            user_id = men_user['_id'] if men_user else women_user['_id']
+            return redirect(url_for('mywardrobe', gender=gender, user_id=user_id))
         else:
             return 'Invalid email or password. Please try again.'
     return render_template('signin.html')

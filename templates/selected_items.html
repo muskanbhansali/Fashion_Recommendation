@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Include necessary meta tags, stylesheets, and scripts -->
+    <!-- ... -->
+  </head>
+
+  <body>
+    <h1>Selected Items</h1>
+
+    <!-- Display Topwear -->
+    <div class="selected-section" id="topwear-section">
+      <h2>Topwear</h2>
+      <div class="container" id="topwear-container">
+        <!-- Selected topwear items will be appended here -->
+      </div>
+    </div>
+
+    <!-- Display Bottomwear -->
+    <div class="selected-section" id="bottomwear-section">
+      <h2>Bottomwear</h2>
+      <div class="container" id="bottomwear-container">
+        <!-- Selected bottomwear items will be appended here -->
+      </div>
+    </div>
+
+    <!-- Display Footwear -->
+    <div class="selected-section" id="footwear-section">
+      <h2>Footwear</h2>
+      <div class="container" id="footwear-container">
+        <!-- Selected footwear items will be appended here -->
+      </div>
+    </div>
+
+    <!-- Add this script at the end of the selected_items.html file -->
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        // Fetch the selected items data from the server
+        const gender = "{{ gender }}"; // Accessing the gender passed from Flask
+        const topwearContainer = document.getElementById("topwear-container");
+        const bottomwearContainer = document.getElementById(
+          "bottomwear-container"
+        );
+        const footwearContainer = document.getElementById("footwear-container");
+        if (topwearContainer && bottomwearContainer && footwearContainer) {
+          console.log("Fetching selected items for gender:", gender);
+          console.log(topwearContainer);
+
+          fetch(`/selected_items/${gender}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                tids: [],
+                bids: [],
+                fids: []
+                // Add the selected item IDs here
+                
+            })
+        })
+            .then((response) => response.json())
+            .then((data) => {
+              // Display topwear items
+              displaySelectedItems(topwearContainer, data.topwear_items);
+             
+              // Display bottomwear items
+              displaySelectedItems(bottomwearContainer, data.bottomwear_items);
+
+              // Display footwear items
+              displaySelectedItems(footwearContainer, data.footwear_items);
+            })
+
+            .catch((error) =>
+              console.error("Error fetching selected items:", error)
+            );
+        } else {
+          console.error("One or more containers not found");
+        }
+      });
+
+      function displaySelectedItems(container, items) {
+        items.forEach((item) => {
+          const newItem = document.createElement("div");
+          newItem.className = "item";
+          newItem.innerHTML = `
+        <img src="/static/images/${item.id}.jpg" alt="${item.productDisplayName}">
+        <p>ID: ${item.id}</p>
+        <p>Product Name: ${item.productDisplayName}</p>
+      `;
+          container.appendChild(newItem);
+        });
+      }
+    </script>
+  </body>
+</html>
