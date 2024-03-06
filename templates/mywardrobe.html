@@ -132,7 +132,7 @@
           {% if topwear_data %}
           {% for item in topwear_data %}
           <div class="item">
-            <input type="checkbox" name="selectedTopwearItems" value="{{ item.id}}">
+            <input type="checkbox" name="selectedItems-topwear" value="{{ item.id}}">
             <img src="{{ url_for('static', filename='images/' + item.id + '.jpg') }}">
             <p>ID: {{ item.id }}</p>
             <p>Product Name: {{ item.productDisplayName }}</p>
@@ -152,7 +152,7 @@
           {% for item in bottomwear_data %}
           <!-- Render bottomwear item here -->
           <div class="item">
-            <input type="checkbox" name="selectedBottomwearItems" value="{{ item.id}}">
+            <input type="checkbox" name="selectedItems-bottomwear" value="{{ item.id}}">
             <img src="{{ url_for('static', filename='images/' + item.id + '.jpg') }}">
             <p>ID: {{ item.id }}</p>
             <p>Product Name: {{ item.productDisplayName }}</p>
@@ -171,7 +171,7 @@
           {% if footwear_data %}
           {% for item in footwear_data %}
           <div class="item">
-            <input type="checkbox" name="selectedFootwearItems" value="{{ item.id}}">
+            <input type="checkbox" name="selectedItems-footwear" value="{{ item.id}}">
             <img src="{{ url_for('static', filename='images/' + item.id + '.jpg') }}">
             <p>ID: {{ item.id }}</p>
             <p>Product Name: {{ item.productDisplayName }}</p>
@@ -246,7 +246,7 @@
           const newItem = document.createElement('div');
           newItem.className = 'item';
           newItem.innerHTML = `
-            <input type="checkbox" name="selectedItems" value="${item.id}">
+            <input type="checkbox" name="selectedItems-${category}" value="${item.id}">
             <img src="/static/images/${item.id}.jpg" alt="${item.productDisplayName}">
             <p>ID: ${item.id}</p>
             <p>Product Name: ${item.productDisplayName}</p>
@@ -279,6 +279,9 @@
   function handleCheckboxChange(event) {
     // Handle checkbox change event
     // For example, you can update a list of selected items
+    const selectedCheckbox = event.target;
+    const itemId = selectedCheckbox.value;
+    console.log(`Checkbox with ID ${itemId} is ${selectedCheckbox.checked ? 'checked' : 'unchecked'}`);
   }
 
   function isTopwear(itemId) {
@@ -300,9 +303,9 @@
   }
   
   function selectItems() {
-    const selectedTopwearItems = document.querySelectorAll('input[name="selectedTopwearItems"]:checked');
-    const selectedBottomwearItems = document.querySelectorAll('input[name="selectedBottomwearItems"]:checked');
-    const selectedFootwearItems = document.querySelectorAll('input[name="selectedFootwearItems"]:checked');
+    const selectedTopwearItems = document.querySelectorAll('input[name="selectedItems-topwear"]:checked');
+    const selectedBottomwearItems = document.querySelectorAll('input[name="selectedItems-bottomwear"]:checked');
+    const selectedFootwearItems = document.querySelectorAll('input[name="selectedItems-footwear"]:checked');
 
     const selectedTopwearIds = Array.from(selectedTopwearItems).map(item => item.value);
     const selectedBottomwearIds = Array.from(selectedBottomwearItems).map(item => item.value);

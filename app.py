@@ -85,30 +85,19 @@ def load_more(gender, category):
 
     # Return the JSON response
     return jsonify(response_data)
-# @app.route('/selected_items/<gender>', methods=['GET','POST'])
-# def selected_items(gender):
-#     # Get the selected item IDs from the query parameters
-#     selected_ids = request.args.get('ids', '').split(',')
 
-#     # Select the appropriate collection based on gender
-#     collection = male_collection if gender == 'male' else female_collection
-
-#     # Fetch selected items from the MongoDB collection
-#     selected_items = list(collection.find({'id': {'$in': selected_ids}}))
-
-#     return render_template('selected_items.html', selected_items=selected_items, gender=gender)
 
 @app.route('/selected_items/<gender>', methods=['GET', 'POST'])
 def selected_items(gender):
     try:
         if request.method == 'POST':
-            # Get the selected item IDs from the request data
+             # Get the selected item IDs from the request data
             topwear_ids = request.json.get('tids', [])
             bottomwear_ids = request.json.get('bids', [])
-            footwear_ids = request.json.get('fids', [])
+            footwear_ids = request.json.get('fids', []) 
         
 
-            # Select the appropriate collection based on gender
+             # Select the appropriate collection based on gender
             collection = male_collection if gender == 'male' else female_collection
 
             # Fetch selected items from the MongoDB collection for each category
@@ -116,24 +105,24 @@ def selected_items(gender):
             bottomwear_items = list(collection.find({'id': {'$in': bottomwear_ids}}))
             footwear_items = list(collection.find({'id': {'$in': footwear_ids}}))
 
-            print(topwear_items)
+            # Extract relevant information (id, productDisplayName) for each item
+            topwear_data = [{'id': item['id'], 'productDisplayName': item['productDisplayName']} for item in topwear_items]
+            bottomwear_data = [{'id': item['id'], 'productDisplayName': item['productDisplayName']} for item in bottomwear_items]
+            footwear_data = [{'id': item['id'], 'productDisplayName': item['productDisplayName']} for item in footwear_items]
+
+            print(f"Topwear items: {topwear_data}")
+            print(f"Bottomwear items: {bottomwear_data}")
+            print(f"Footwear items: {footwear_data}")
 
             response_data = {
-                'topwear_items': topwear_items,
-                'bottomwear_items': bottomwear_items,
-                'footwear_items': footwear_items,
+                'topwear_items': topwear_data,
+                'bottomwear_items': bottomwear_data,
+                'footwear_items': footwear_data,
                 'gender': gender
             }
 
-            print("Response before jsonify:", response_data)
-        
             return jsonify(response_data)
-            # return jsonify({
-            #     'topwear_items': topwear_items,
-            #     'bottomwear_items': bottomwear_items,
-            #     'footwear_items': footwear_items,
-            #     'gender': gender
-            # })
+    
     except Exception as e:
         # Log the error for debugging purposes
         print(f"Error fetching selected items: {e}")
@@ -141,7 +130,8 @@ def selected_items(gender):
         # Return a JSON response indicating an error
         return jsonify({'error': 'Error fetching selected items'}), 500
 
-    return render_template('selected_items.html', gender=gender)
+    return render_template('selected_items.html',selected_items=selected_items, gender=gender)
+
 
 
 
