@@ -2,7 +2,12 @@ import os
 from flask import Flask, render_template, request, jsonify, redirect, url_for
 from pymongo import MongoClient
 from bson import ObjectId
+from flask_pymongo import PyMongo
 app = Flask(__name__, static_url_path='/static')
+
+app.config['MONGO_URI'] = 'mongodb+srv://Ritika11:L2TiqArOQW5JPReH@cluster0.iwjd02g.mongodb.net/'
+mongo = PyMongo(app)
+
 
 @app.route('/index')
 def index():
@@ -15,6 +20,22 @@ db = client['fashion']
 male_collection = db['men']
 female_collection = db['women']
 collection_users = db['users']
+
+# Mapping of filter values to corresponding 'usage' and 'season' values
+usage_mapping = {
+    'casual': 'Casual',
+    'ethnic': 'Ethnic',
+    'formal': 'Formal',
+    'party': 'Party',
+    'sports': 'Sports'
+}
+
+season_mapping = {
+    'fall': 'Fall',
+    'spring': 'Spring',
+    'summer': 'Summer',
+    'winter': 'Winter'
+}
 
 @app.route('/mywardrobe/<gender>/<user_id>')
 def mywardrobe(gender, user_id):
@@ -132,6 +153,96 @@ def selected_items(gender):
 
     return render_template('selected_items.html',selected_items=selected_items, gender=gender)
 
+@app.route('/toggle_like_outfit/<int:user_id>/<int:outfit_number>', methods=['POST'])
+def toggle_like_outfit(user_id, outfit_number):
+    try:
+        # Get the MongoDB collection for liked outfits
+        liked_outfits_collection = mongo.db.liked_outfits
+
+        # Check if the outfit is already liked by the user
+        existing_like = liked_outfits_collection.find_one({'user_id': user_id, 'outfit_number': outfit_number})
+
+        if existing_like:
+            # Outfit is already liked, remove the like
+            liked_outfits_collection.delete_one({'_id': existing_like['_id']})
+            liked = False
+        else:
+            # Outfit is not liked, add the like
+            liked_outfits_collection.insert_one({'user_id': user_id, 'outfit_number': outfit_number})
+            liked = True
+
+        # Return a JSON response
+        return jsonify({'success': True, 'liked': liked})
+
+    except Exception as e:
+        # Handle exceptions and return an appropriate error response
+        return jsonify({'error': str(e)}), 500
+
+# Function to simulate toggling the like status (replace with your actual logic)
+def toggle_like_status(user_id, outfit_number):
+    # TODO: Implement your actual logic to toggle the like status in your database or storage
+
+    # For demonstration purposes, just return True if the outfit number is odd
+    return outfit_number % 2 == 1
+
+# Sample MongoDB collections for different types of wear
+# topwear_collection = [...]  # Replace with your actual collection
+# bottomwear_collection = [...]  # Replace with your actual collection
+# footwear_collection = [...]  # Replace with your actual collection
+
+@app.route('/filtered_items/<gender>', methods=['POST'])
+def filtered_items(gender):
+    try:
+        filters = request.json.get('filters', {})
+        print(f"Received Filters: {filters}")
+
+        # Initialize response data
+        response_data = {'gender': gender, 'filtered_items': {}}
+
+        # List of master categories to filter
+        sub_categories = ['Topwear', 'Bottomwear']
+
+
+        # Iterate through each master category
+        for category in sub_categories:
+            # Build a query based on the filters provided in the payload
+            query = {'gender': gender, 'subCategory': category}
+
+            # Map filter values to 'usage' and include only filters with True values in the query
+            usage_filters = [usage_mapping[key] for key, value in filters.items() if value and key in usage_mapping]
+            if usage_filters:
+                query['usage'] = {'$in': usage_filters}
+
+            # Map filter values to 'season' and include only filters with True values in the query
+            season_filters = [season_mapping[key] for key, value in filters.items() if value and key in season_mapping]
+            if season_filters:
+                query['season'] = {'$in': season_filters}
+
+            # Print the query for debugging
+            print(f"Query for {category}: {query}")
+
+            # Fetch data from MongoDB based on the constructed query
+            category_data = list(male_collection.find(query).limit(5))
+
+            # Print the fetched data for debugging
+            print(f"Fetched data for {category}: {category_data}")
+
+            # Add data to the response
+            response_data['filtered_items'][category] = [
+                {'id': item['id'], 'productDisplayName': item['productDisplayName']} for item in category_data
+            ]
+
+        # Print the final response data for debugging
+        print(f"Final Response Data: {response_data}")
+
+        # Return the response
+        return jsonify(response_data)
+
+    except Exception as e:
+        # Log the error for debugging purposes
+        print(f"Error fetching filtered items: {e}")
+        # Return a JSON response indicating an error
+        return jsonify({'error': 'Error fetching filtered items'}), 500
 
 
 
@@ -183,6 +294,11 @@ def signin():
 def contact():
    # return 'Hello, World!'
     return render_template("contact.html")
+
+@app.route('/features')
+def features():
+   # return 'Hello, World!'
+    return render_template("features.html")
 
 @app.route('/about')
 def about():
