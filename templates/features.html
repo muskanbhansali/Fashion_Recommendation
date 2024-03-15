@@ -44,35 +44,51 @@
       </nav>
     </header>
 
-    <div class="myDiv">
-        <font color="white" size="5" align="left">Dress Me Up</font><br><br>
-        <h1><center><font color="white" size="7">Personal Outfit Recommendations</font></center></h1>
-        <p align="center"><font color="white" size="6">Get outfit and style yourself based on your wardrobe.</font></p><br>
-        <center><button><a href="signup"><br> Get Started <br></a></button><br></center><br>
-    </div><br><br>
-    <div class="hit"><br>
-        <h2>How It Works</h2><br>
-    </div><br>
-    <br>
-    <div>
-        <center>
-        <table>
-            <tr>
-                <td><h1>1. Add clothes you own to your wardrobe.</h1></td>
-                <td><img src="C:\Users\hp\Downloads\sustainable-fashion-isometric-background-with-two-woman-demonstrated-sweatshirt-made-from-recycled-m\a.jpg" height="500" width="500"></td>
-            </tr><br>
-            <tr>
-                <td><img src="C:\Users\hp\Downloads\online-fashion-shopping-collage.jpg" height="500" width="500"></td>
-                <td><h1>2. See outfits that you can create right away.</h1></td>
-            </tr><br>
-            <tr>
-                <td><h1>3. See the items that your wardrobe misses.</h1></td>
-                <td><img src="C:\Users\hp\Downloads\woman-holding-shirts-choosing-what-outfit-wear.jpg" height="500" width="500"></td>
-            </tr>
-        </table>
-        </center>
-    </div><br>
-    <br>
+    <div class="headpane">
+      <h1 class="text-heading fs-1 fw-bold mb-3">How It Works</h1>
+    </div>
+
+    <section class="container py-5 mt-5" id="about">
+      <div class="row g-5">
+        <div class="col-12 col-lg-5">
+          <img src="{{ url_for('static', filename='assets/f1.jpg') }}" alt="" class="img-fluid mx-auto d-block">
+        </div>
+        <div class="col-12 col-lg-7">
+          <div class="text-center text-md-start">
+            <h2 class="text-primary fs-1 fw-bold mb-3">1. Add Clothes You Own To Your Wardrobe</h2>
+            <p>At Canvas, we show a pleothra of outfits to choose from. Where you can choose them according to your wardrobe collection or can also see towards your next purchase option. It gives you a chance to explore your potential outfits because we believe that fashion is a powerful form of self-expression.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="container py-5 mt-5" id="about">
+      <div class="row g-5">
+        <div class="col-12 col-lg-7">
+          <div class="text-center text-md-start">
+            <h2 class="text-primary fs-1 fw-bold mb-3">2. See outfits That You Can Create Right Away.</h2>
+            <p>At Canvas, you can explore endless outfit possibilities tailored to your style. Our algorithm analyzes your existing collection to suggest curated ensembles that suit your taste and occasion. With just a few clicks, you can discover new combinations and breathe life into your wardrobe.</p>
+          </div>
+        </div>
+        <div class="col-12 col-lg-5">
+          <img src="{{ url_for('static', filename='assets/f2.jpg') }}" alt="" class="img-fluid mx-auto d-block">
+        </div>
+      </div>
+    </section>
+
+    <section class="container py-5 mt-5" id="about">
+      <div class="row g-5">
+        <div class="col-12 col-lg-5">
+          <img src="{{ url_for('static', filename='assets/f3.jpg') }}" alt="" class="img-fluid mx-auto d-block">
+        </div>
+        <div class="col-12 col-lg-7">
+          <div class="text-center text-md-start">
+            <h2 class="text-primary fs-1 fw-bold mb-3">3. See The Items That Your Wardrobe Misses.</h2>
+            <p>At Canvas, you may discover the crucial pieces absent from your wardrobe effortlessly. Our platform meticulously examines your current collection, identifying gaps to elevate your style. From timeless essentials to trendy accents, receive personalized recommendations that align with your fashion preferences. Streamline your shopping experience by focusing on precisely what your wardrobe lacks. With Closet Canvas, effortlessly fill in the missing pieces and curate a wardrobe that reflects your unique style and versatility.</p>
+          </div>
+        </div>
+      </div>
+    </section>
 
     <section class='footer'>
         <nav class="foot">

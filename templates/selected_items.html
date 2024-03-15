@@ -32,22 +32,8 @@
             <li class="nav-item">
               <a class="nav-link" aria-current="page" href="{{ url_for('index') }}">Home</a>
             </li>
-            <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
-                aria-expanded="false">
-                Products
-              </a>
-              <ul class="dropdown-menu">
-                <li>
-                  <a class="dropdown-item" href="{{ url_for('trends') }}">Trends</a>
-                </li>
-                <li>
-                  <a class="dropdown-item" href="{{ url_for('occasion') }}">Occasions</a>
-                </li>
-                <li>
-                  <a class="dropdown-item" href="mywardrobe">My Wardrobe</a>
-                </li>
-              </ul>
+            <li class="nav-item">
+              <a class="nav-link" href="">My Wardrobe</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="{{ url_for('contact') }}">Contact</a>
@@ -60,17 +46,21 @@
                 <!-- User profile icon -->
               </a>
               <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                <li><a class="dropdown-item" href="#">Profile</a></li>
                 <li><a class="dropdown-item" href="/index">Logout</a></li>
               </ul>
             </li>
-          </ul>
+            <li class="nav-item">
+              <a class="nav-link" href="#gen"><button onclick="generateRandomOutfits()" class="btn btn-primary">Generate Outfit</button></a>
+            </li>
+          </ul> 
         </div>
       </div>
     </nav>
   </header>
 
-  <h1>Selected Items</h1>
+  <div class="headpane">
+    <h1 class="text-heading fs-1 fw-bold mb-3">Selected Items</h1>
+  </div>
 
   <!-- Display Topwear -->
   <div class="selected-section" id="topwear-section">
@@ -95,11 +85,13 @@
       <!-- Selected footwear items will be appended here -->
     </div>
   </div>
-  <button onclick="generateRandomOutfits()" class="btn btn-primary">Generate Outfit</button>
   <!-- Container for generated outfits -->
+  <div class="headpane" id="gen">
+    <h1 class="text-heading fs-1 fw-bold mb-3" >Generated Outfits</h1>
+  </div>
 
   <div id="generatedOutfitsContainer" class="outfit-container">
-
+    
     <!-- The generated outfits will be appended here -->
     <!-- Add a like button for each outfit with a data attribute to store the liked status -->
   </div>

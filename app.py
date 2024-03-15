@@ -37,8 +37,9 @@ season_mapping = {
     'winter': 'Winter'
 }
 
-@app.route('/mywardrobe/<gender>/<user_id>')
+@app.route('/mywardrobe/<gender>/<user_id>', methods=['GET', 'POST'])
 def mywardrobe(gender, user_id):
+    
     # Select the appropriate collection based on gender
     collection = male_collection if gender == 'male' else female_collection
 
@@ -66,8 +67,9 @@ def mywardrobe(gender, user_id):
 
     #fetch user information
     user_info = collection_users.find_one({'_id': ObjectId(user_id)})
-
+    
     return render_template('mywardrobe.html', topwear_data=topwear_data, bottomwear_data=bottomwear_data, footwear_data=footwear_data, gender=gender, item=item, page=page, user_info=user_info)
+    
 
 @app.route('/load_more/<gender>/<category>')
 def load_more(gender, category):
@@ -106,7 +108,6 @@ def load_more(gender, category):
 
     # Return the JSON response
     return jsonify(response_data)
-
 
 @app.route('/selected_items/<gender>', methods=['GET', 'POST'])
 def selected_items(gender):
@@ -185,10 +186,6 @@ def toggle_like_status(user_id, outfit_number):
     # For demonstration purposes, just return True if the outfit number is odd
     return outfit_number % 2 == 1
 
-# Sample MongoDB collections for different types of wear
-# topwear_collection = [...]  # Replace with your actual collection
-# bottomwear_collection = [...]  # Replace with your actual collection
-# footwear_collection = [...]  # Replace with your actual collection
 
 @app.route('/filtered_items/<gender>', methods=['POST'])
 def filtered_items(gender):
@@ -196,15 +193,17 @@ def filtered_items(gender):
         filters = request.json.get('filters', {})
         print(f"Received Filters: {filters}")
 
+        # Select the appropriate collection based on gender
+        collection = male_collection if gender == 'Men' else female_collection
+
         # Initialize response data
         response_data = {'gender': gender, 'filtered_items': {}}
 
         # List of master categories to filter
-        sub_categories = ['Topwear', 'Bottomwear']
-
+        master_categories = ['Topwear', 'Bottomwear']
 
         # Iterate through each master category
-        for category in sub_categories:
+        for category in master_categories:
             # Build a query based on the filters provided in the payload
             query = {'gender': gender, 'subCategory': category}
 
@@ -222,7 +221,7 @@ def filtered_items(gender):
             print(f"Query for {category}: {query}")
 
             # Fetch data from MongoDB based on the constructed query
-            category_data = list(male_collection.find(query).limit(5))
+            category_data = list(collection.find(query).limit(50))
 
             # Print the fetched data for debugging
             print(f"Fetched data for {category}: {category_data}")
@@ -231,6 +230,25 @@ def filtered_items(gender):
             response_data['filtered_items'][category] = [
                 {'id': item['id'], 'productDisplayName': item['productDisplayName']} for item in category_data
             ]
+
+        # Fetch data for Footwear separately
+        footwear_query = {'gender': gender, 'masterCategory': 'Footwear'}
+        usage_filters = [usage_mapping[key] for key, value in filters.items() if value and key in usage_mapping]
+        if usage_filters:
+            footwear_query['usage'] = {'$in': usage_filters}
+
+        season_filters = [season_mapping[key] for key, value in filters.items() if value and key in season_mapping]
+        if season_filters:
+            footwear_query['season'] = {'$in': season_filters}
+
+        print(f"Query for Footwear: {footwear_query}")
+
+        footwear_data = list(collection.find(footwear_query).limit(50))
+        print(f"Fetched data for Footwear: {footwear_data}")
+
+        response_data['filtered_items']['Footwear'] = [
+            {'id': item['id'], 'productDisplayName': item['productDisplayName']} for item in footwear_data
+        ]
 
         # Print the final response data for debugging
         print(f"Final Response Data: {response_data}")
@@ -244,7 +262,63 @@ def filtered_items(gender):
         # Return a JSON response indicating an error
         return jsonify({'error': 'Error fetching filtered items'}), 500
 
+@app.route('/load_more_filtered/<gender>/<category>', methods=['POST'])
+def load_more_filtered(gender, category):
+    try:
+        filters = request.json.get('filters', {})
+        print(f"Received Filters: {filters}")
 
+        # Select the appropriate collection based on gender
+        collection = male_collection if gender == 'Men' else female_collection
+
+        # Initialize response data
+        response_data = {'gender': gender, 'filtered_items': {}}
+
+        # Build a query based on the filters provided in the payload
+        query = {'gender': gender, 'subCategory': category}
+
+        # Map filter values to 'usage' and include only filters with True values in the query
+        usage_filters = [usage_mapping[key] for key, value in filters.items() if value and key in usage_mapping]
+        if usage_filters:
+            query['usage'] = {'$in': usage_filters}
+
+        # Map filter values to 'season' and include only filters with True values in the query
+        season_filters = [season_mapping[key] for key, value in filters.items() if value and key in season_mapping]
+        if season_filters:
+            query['season'] = {'$in': season_filters}
+
+        # Get the page parameter from the request, default to 1 if not provided
+        page = int(request.args.get('page', 2))
+
+        # Adjust the number of items to display per page    
+        items_per_page = 5
+
+        # Calculate the start and end indices for the current page
+        start_index = (page - 1) * items_per_page
+        end_index = start_index + items_per_page
+
+        # Fetch data from MongoDB based on the constructed query
+        category_data = list(collection.find(query).limit(5000))
+
+        # Print the fetched data for debugging
+        print(f"Fetched data for {category}: {category_data}")
+
+        # Add data to the response
+        response_data['filtered_items'][category] = [
+            {'id': item['id'], 'productDisplayName': item['productDisplayName'], 'usage': item['usage'], 'season': item['season']} for item in category_data[start_index:end_index]
+        ]
+
+        # Print the final response data for debugging
+        print(f"Final Response Data: {response_data}")
+
+        # Return the response
+        return jsonify(response_data)
+
+    except Exception as e:
+        # Log the error for debugging purposes
+        print(f"Error fetching filtered items: {e}")
+        # Return a JSON response indicating an error
+        return jsonify({'error': 'Error fetching filtered items'}), 500
 
 # Signup route
 @app.route('/signup', methods=['GET','POST'])

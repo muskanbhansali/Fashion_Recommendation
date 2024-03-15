@@ -25,24 +25,23 @@ header {
 .bg {
   background-image: url("./assets/img2.jpg");
   height: 800px;
-
 }
 
-.bgcontent{
+.bgcontent {
   text-align: right;
   padding: 100px;
 }
 
-.bgcontent .diplay-4{
+.bgcontent .diplay-4 {
   margin-right: 110px;
 }
 
 .bgcontent .btn {
   margin-right: 300px;
-} 
+}
 
 .nav-link {
-  color:#7f5539;
+  color: #7f5539;
   font-weight: 500;
 }
 
@@ -131,9 +130,9 @@ img {
   display: flex;
   flex-wrap: wrap;
   overflow: hidden;
-  max-width: 90%;
-  width:fit-content;
-  gap: 78px;
+  max-width: 100%;
+  width: fit-content;
+  gap: 86px;
   align-items: flex-start;
   justify-content: space-between;
 }
@@ -147,17 +146,20 @@ img {
 /* Style for each item within a row */
 .item {
   flex: 1;
-  display: flex;
+  word-break: break-all;
+  letter-spacing: 0.5px;
   flex-direction: column;
-  margin: 24px;
+  margin: 30px;
   border: 2px solid #7f5539;
   padding: 10px;
   box-sizing: border-box;
   align-items: center;
   background-color: #e6ccb2;
+  height: 300px;
+  display: inline-block;
 }
 
-.items{
+.items {
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -187,9 +189,9 @@ textarea {
 }
 
 .headpane {
-    position: static;
-    background-color: #ddb892;
-    text-align: center;
+  position: static;
+  background-color: #ddb892;
+  text-align: center;
 }
 
 .input {
@@ -267,7 +269,6 @@ a {
   flex: 1 3 auto;
   padding: 5px;
   box-sizing: border-box;
- 
 }
 
 .rin {
@@ -292,11 +293,19 @@ a {
   position: relative;
   gap: 15px;
 }
+button.filtered {
+  display: none;
+}
 
-.btn-wardrop .btn, .btn-primary {
-    background-color: #b08968;
-    border: none;
-  }
+.container1 button {
+  margin-left: 50%;
+}
+
+.btn-wardrop .btn,
+.btn-primary {
+  background-color: #b08968;
+  border: none;
+}
 
 /* Apply these styles when the 'slider' class is present */
 .left-content.slider {
@@ -310,6 +319,8 @@ a {
 }
 
 .filter-section {
+  position: sticky;
+  top: 166px;
   margin-top: 20px;
 }
 
@@ -347,10 +358,9 @@ a {
 /* Style the dropdown menu if needed */
 .dropdown-menu {
   min-width: auto; /* Adjust the minimum width of the dropdown menu */
-  border: 1px solid #9c6644;/* Add border around the dropdown menu */
+  border: 1px solid #9c6644; /* Add border around the dropdown menu */
   border-radius: 5px; /* Add border-radius to soften the corners */
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Add box shadow for a subtle lift */
-
 }
 
 .dropdown-menu a {
@@ -358,21 +368,20 @@ a {
 }
 
 .dropdown-menu a:hover {
-  background-color: #9c6644;                                     /* Set the background color on hover */
+  background-color: #9c6644; /* Set the background color on hover */
   color: #fff; /* Set text color on hover */
 }
 .dropdown-toggle::after {
   left: 90%;
   top: 45%;
   position: absolute;
- 
 }
 
 .navbar-expand-lg .navbar-nav .nav-link {
   color: #7f5539;
   padding: 14px;
 }
-.navbar-expand-lg .navbar-nav .nav-link:hover{
+.navbar-expand-lg .navbar-nav .nav-link:hover {
   color: #333;
 }
 
@@ -398,34 +407,44 @@ svg.ionicon.s-ion-icon {
 }
 .stick {
   position: sticky;
-  top: 138px;
+  top: 100px;
   width: 100%;
   justify-content: right;
 }
-.top{
+.top {
   position: sticky;
+  height: 50px;
+  top: 140px;
 }
-.icon{
+.icon {
   height: 32px;
   width: 32px;
   color: #9c6644;
   background-color: #ede0d4;
 }
-.card{
+.card {
   position: static;
 }
 
-button.liked{
+button.liked {
   background-color: #7f5539;
   color: white;
 }
-.outfit-container{
+.outfit-container {
   display: flex;
   justify-content: space-around;
 }
 
-.outfit{
+.outfit {
   flex: 1;
   text-align: center;
   margin: 10px;
+}
+
+.text-heading {
+  color: #7f5539;
+  height: 50px;
+  align-items: center;
+  display: flex;
+  justify-content: center;
 }
