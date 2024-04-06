@@ -46,13 +46,16 @@
                 <!-- User profile icon -->
               </a>
               <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <li><a class="dropdown-item" href="{{ url_for('profile') }}">Profile</a></li>
                 <li><a class="dropdown-item" href="/index">Logout</a></li>
               </ul>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#gen"><button onclick="generateRandomOutfits()" class="btn btn-primary">Generate Outfit</button></a>
+              <a class="nav-link" href="#gen"><button id="generateOutfitsButton" class="btn btn-primary">
+                  Generate Outfit
+                </button></a>
             </li>
-          </ul> 
+          </ul>
         </div>
       </div>
     </nav>
@@ -85,17 +88,25 @@
       <!-- Selected footwear items will be appended here -->
     </div>
   </div>
-  <!-- Container for generated outfits -->
+  <!-- Container for generated outfits --><br /><br />
   <div class="headpane" id="gen">
-    <h1 class="text-heading fs-1 fw-bold mb-3" >Generated Outfits</h1>
+    <h1 class="text-heading fs-1 fw-bold mb-3">Generated Outfits</h1>
   </div>
 
   <div id="generatedOutfitsContainer" class="outfit-container">
-    
     <!-- The generated outfits will be appended here -->
     <!-- Add a like button for each outfit with a data attribute to store the liked status -->
   </div>
 
+  <section class="footer">
+    <nav class="foot">
+      <a href="{{ url_for('contact') }}">Contact us</a>
+      <a href="/site/terms-of-service">Terms of Service</a>
+      <a href="/site/privacy-policy">Privacy Policy</a>
+      <a href="/site/copyright">Copyright</a>
+    </nav>
+    <p class="copyright">© 2024 .Closet Canvas. All rights reserved.</p>
+  </section>
   <script>
     // Function to get URL parameter values
     function getURLParameter(name) {
@@ -129,6 +140,25 @@
         console.log("fids:", Fids);
 
         console.log("Fetching selected items for gender:", gender);
+
+        // Debugging logs and checks before calling generateRandomOutfits
+        console.log("Tids:", Tids);
+        console.log("Bids:", Bids);
+        console.log("Fids:", Fids);
+
+        // Check if the arrays are defined and have valid lengths before calling generateRandomOutfits
+        if (
+          Tids &&
+          Bids &&
+          Fids &&
+          Tids.length > 0 &&
+          Bids.length > 0 &&
+          Fids.length > 0
+        ) {
+          generateRandomOutfits(Tids, Bids, Fids);
+        } else {
+          console.error("One or more arrays are undefined or empty.");
+        }
 
         fetch(`/selected_items/${gender}`, {
           method: "POST",
@@ -184,21 +214,76 @@
       });
     }
 
-    function getRandomItem(items) {
-      return items[Math.floor(Math.random() * items.length)];
+    // Function to get URL parameter values
+    function getURLParameter(name) {
+      const urlParams = new URLSearchParams(window.location.search);
+      return urlParams.get(name);
     }
 
-    function generateRandomOutfits() {
-      const topwearContainer = document.getElementById("topwear-container");
-      const bottomwearContainer = document.getElementById("bottomwear-container");
-      const footwearContainer = document.getElementById("footwear-container");
-      const generatedOutfitsContainer = document.getElementById("generatedOutfitsContainer");
+    // Event listener for when the DOM content is loaded
+    document.addEventListener("DOMContentLoaded", function () {
+      // Get the "Generate Outfits" button element
+      const generateOutfitsButton = document.getElementById(
+        "generateOutfitsButton"
+      );
 
-      const cloneItem = (item) => {
-        const clone = item.cloneNode(true);
-        clone.removeAttribute("id");
-        return clone;
-      };
+      // Add a click event listener to the "Generate Outfits" button
+      generateOutfitsButton.addEventListener("click", function () {
+        // Call the function to generate outfits when the button is clicked
+        generateOutfits();
+      });
+    });
+
+    // Function to generate outfits
+    function generateOutfits() {
+      // Fetch the selected items data from the server
+      const gender = "{{ gender }}"; // Accessing the gender passed from Flask
+      const topwearContainer = document.getElementById("topwear-container");
+      const bottomwearContainer = document.getElementById(
+        "bottomwear-container"
+      );
+      const footwearContainer = document.getElementById("footwear-container");
+
+      // Function to get URL parameter
+      function getURLParameter(name) {
+        const urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get(name);
+      }
+
+      // Check if the containers are found
+      if (topwearContainer && bottomwearContainer && footwearContainer) {
+        // Extract tids, bids, and fids from the URL
+        const Tids = getURLParameter("tids")
+          ? getURLParameter("tids").split(",")
+          : [];
+        const Bids = getURLParameter("bids")
+          ? getURLParameter("bids").split(",")
+          : [];
+        const Fids = getURLParameter("fids")
+          ? getURLParameter("fids").split(",")
+          : [];
+
+        console.log("tids:", Tids);
+        console.log("bids:", Bids);
+        console.log("fids:", Fids);
+
+        console.log("Fetching selected items for gender:", gender);
+
+        // Check if the arrays are defined and have valid lengths before calling generateRandomOutfits
+        if (Tids.length > 0 && Bids.length > 0 && Fids.length > 0) {
+          generateRandomOutfits(Tids, Bids, Fids); // Call the function to generate outfits
+        } else {
+          console.error("One or more arrays are empty.");
+        }
+      } else {
+        console.error("One or more containers not found");
+      }
+    }
+
+    function generateRandomOutfits(Tids, Bids, Fids) {
+      const generatedOutfitsContainer = document.getElementById(
+        "generatedOutfitsContainer"
+      );
 
       // Clear previous generated outfits
       generatedOutfitsContainer.innerHTML = "";
@@ -209,77 +294,87 @@
 
       // Generate and display random outfits within the single container
       for (let i = 0; i < 3; i++) {
-        const randomTopwear = getRandomItem(Array.from(topwearContainer.children));
-        const randomBottomwear = getRandomItem(Array.from(bottomwearContainer.children));
-        const randomFootwear = getRandomItem(Array.from(footwearContainer.children));
+        const randomTopwearId = getRandomItem(Tids);
+        const randomBottomwearId = getRandomItem(Bids);
+        const randomFootwearId = getRandomItem(Fids);
 
         const newOutfit = document.createElement("div");
         newOutfit.className = "outfit";
         newOutfit.innerHTML = `<h3>Outfit ${i + 1}</h3>`;
 
-        // Append cloned images to the new outfit
-        if (randomTopwear) {
-          const clonedTopwear = cloneItem(randomTopwear);
-          newOutfit.appendChild(clonedTopwear);
-        }
+        // Append images based on IDs
+        const topwearItem = createItemElement("Topwear", randomTopwearId);
+        const bottomwearItem = createItemElement("Bottomwear", randomBottomwearId);
+        const footwearItem = createItemElement("Footwear", randomFootwearId);
 
-        if (randomBottomwear) {
-          const clonedBottomwear = cloneItem(randomBottomwear);
-          newOutfit.appendChild(clonedBottomwear);
-        }
+        newOutfit.appendChild(topwearItem);
+        newOutfit.appendChild(bottomwearItem);
+        newOutfit.appendChild(footwearItem);
 
-        if (randomFootwear) {
-          const clonedFootwear = cloneItem(randomFootwear);
-          newOutfit.appendChild(clonedFootwear);
-        }
-
-        // Create like and dislike buttons for each outfit
+        // Create like button
         const likeButton = document.createElement("button");
         likeButton.textContent = "Like";
-        likeButton.className = "like-button";
-        likeButton.setAttribute('data-liked', 'false'); // Initial liked status
-        likeButton.onclick = () => toggleLikeOutfit(i + 1);
+        likeButton.className = "btn btn-primary";
+        // Add click event listener to the like button
+        likeButton.addEventListener("click", function () {
+          // Get tid, bid, fid from the outfit container
+          const tid = randomTopwearId;
+          const bid = randomBottomwearId;
+          const fid = randomFootwearId;
+          // Log or perform any action with tid, bid, fid
+          // console.log(`Tid: ${tid}, Bid: ${bid}, Fid: ${fid}`);
 
-        // Append the buttons to the new outfit
-        newOutfit.appendChild(likeButton);
-
-        // Append the new outfit to the single container
-        outfitContainer.appendChild(newOutfit);
-      }
-
-      // Append the single container to the main container
-      generatedOutfitsContainer.appendChild(outfitContainer);
-    }
-
-    function toggleLikeOutfit(outfitNumber) {
-      // Implement your logic for handling a liked outfit
-      const likeButton = event.target;
-      const isLiked = likeButton.getAttribute('data-liked') === 'true';
-
-      // Replace 'user_id' and 'outfitNumber' with your actual user ID and outfit number
-      const user_id = 1; // Replace with your user ID
-      fetch(`/toggle_like_outfit/${user_id}/${outfitNumber}`, {
-        method: 'POST',
-      })
-        .then(response => response.json())
-        .then(data => {
-          console.log(data);
-
-          // Update the UI to reflect the change in like status
-          if (isLiked) {
-            likeButton.setAttribute('data-liked', 'false');
-            likeButton.classList.remove('liked');
-          } else {
-            likeButton.setAttribute('data-liked', 'true');
-            likeButton.classList.add('liked');
-          }
-        })
-        .catch(error => {
-          console.error('Error toggling like status:', error);
+          // Send an AJAX POST request to the Flask backend
+          fetch("/like_item", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              tid: tid,
+              bid: bid,
+              fid: fid,
+            }),
+          })
+            .then((response) => {
+              if (response.ok) {
+                // Redirect the user to the profile page after successful like
+                window.location.href = "/profile";
+              } else {
+                // Handle error if the item could not be liked
+                console.error("Failed to like the item.");
+              }
+            })
+            .catch((error) => {
+              console.error("Error:", error);
+              alert(
+                "An error occurred while liking the item. Please try again."
+              );
+            });
         });
+        newOutfit.appendChild(likeButton);
+        // Append the new outfit to the single container
+        generatedOutfitsContainer.appendChild(newOutfit);
+      }
     }
 
+    function createItemElement(type, id) {
+      const itemContainer = document.createElement("div");
+      itemContainer.className = "items";
+      const itemImg = document.createElement("img");
+      itemImg.src = getImageUrl(id, type);
+      itemImg.alt = type;
+      itemContainer.appendChild(itemImg);
+      return itemContainer;
+    }
 
+    function getRandomItem(items) {
+      return items[Math.floor(Math.random() * items.length)];
+    }
+
+    function getImageUrl(id, type) {
+      return `/static/images/${id}.jpg`;
+    }
   </script>
   <!-- <script src="{{ url_for('static', filename='script.js') }}"></script> -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"

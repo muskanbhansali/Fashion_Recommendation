@@ -158,17 +158,30 @@ img {
   height: 300px;
   display: inline-block;
 }
-
 .items {
   flex: 1;
   display: flex;
   flex-direction: column;
-  margin: 24px;
-  border: none;
-  padding: 10px;
+  margin: -1px;
+  border: 3px solid #7f5539;
+  padding: 5px;
   box-sizing: border-box;
   align-items: center;
   background-color: #e6ccb2;
+}
+
+.items1 {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  margin: -1px;
+  border: 3px solid #7f5539;
+  padding: 5px;
+  box-sizing: border-box;
+  align-items: center;
+  background-color: #e6ccb2;
+  gap: 10px;
+  border-radius: 5px;
 }
 /* Clearfix to handle the last row if it has fewer than 5 items */
 /* .row::after {
@@ -407,7 +420,7 @@ svg.ionicon.s-ion-icon {
 }
 .stick {
   position: sticky;
-  top: 100px;
+  top: 140px;
   width: 100%;
   justify-content: right;
 }
@@ -430,6 +443,7 @@ button.liked {
   background-color: #7f5539;
   color: white;
 }
+
 .outfit-container {
   display: flex;
   justify-content: space-around;
@@ -438,7 +452,7 @@ button.liked {
 .outfit {
   flex: 1;
   text-align: center;
-  margin: 10px;
+  margin: 130px;
 }
 
 .text-heading {
@@ -447,4 +461,113 @@ button.liked {
   align-items: center;
   display: flex;
   justify-content: center;
+}
+
+/* styles.css */
+.profile-section {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  z-index: 1;
+}
+
+.profile-circle {
+  width: 300px;
+  height: 300px;
+  border-radius: 50%;
+  background-image: linear-gradient(120deg,  #e6ccb2, #7f5539);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.liked-outfits-container {
+  position: absolute;
+  top: 150px; /* Adjust this value to control the overlap */
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ede0d4;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  padding: 20px;
+  overflow: auto;
+}
+
+.liked-outfits {
+  max-width: 900px;
+  margin: 100px 300px;
+  width: 900px;
+}
+
+#outfit-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.logout-btn {
+  width: 100%;
+  padding: 10px;
+  background-color: #b08968;
+  color: #fff;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  margin-top: 10px;
+}
+.logout-btn:hover {
+  background-color: #9c6644;
+}
+
+
+/* .outfit-container {
+  display: flex;
+  justify-content: space-around;
+}
+
+.outfit {
+  flex: 1;
+  text-align: center;
+  margin: 130px;
+} */
+
+.outfit-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+  gap: 40px;
+  flex-direction: row;
+  align-content: stretch;
+  width: 900px;
+}
+.outfit-item {
+  margin: 8px;
+  text-align: center;
+  border-radius: 5px;
+  width: 300px;
+  flex-basis: calc(15% - 20px);
+}
+
+.items1 img {
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  border-radius: 5px;
+}
+
+.remove-outfit-btn {
+  padding: 10px;
+  background-color: #b08968;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 18px;
+}
+
+.remove-outfit-btn:hover {
+  background-color: #9c6644;
 }

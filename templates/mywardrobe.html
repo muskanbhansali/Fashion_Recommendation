@@ -34,20 +34,6 @@
             <li class="nav-item">
               <a class="nav-link" aria-current="page" href="{{ url_for('index') }}">Home</a>
             </li>
-            <!-- <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
-                aria-expanded="false">
-                My Wardrobe
-              </a>
-              <ul class="dropdown-menu">
-                <li>
-                  <a class="dropdown-item" href="{{ url_for('trends') }}">Recommended</a>
-                </li>
-                <li>
-                  <a class="dropdown-item" href="{{ url_for('occasion') }}">Liked</a>
-                </li>
-              </ul>
-            </li> -->
             <li class="nav-item">
               <a class="nav-link" href="#" id="redirectButton">My Wardrobe</a>
             </li>
@@ -62,6 +48,7 @@
                 <!-- User profile icon -->
               </a>
               <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <li><a class="dropdown-item" href="{{ url_for('profile') }}">Profile</a></li>
                 <li><a class="dropdown-item" href="/index">Logout</a></li>
               </ul>
             </li>
@@ -116,14 +103,14 @@
     <div class="right-content rin">
       <div class="stick">
         <div class="btn-wardrop">
-          {% if gender == 'male' %}
+          <!-- {% if gender == 'male' %}
           <button type="button" class="btn btn-primary active" disabled>
             Male
           </button>
           <button type="button" class="btn btn-primary" disabled>
             Female
-          </button>
-          {% elif gender == 'female' %}
+          </button> -->
+          <!-- {% elif gender == 'female' %}
           <button type="button" class="btn btn-primary" disabled>Male</button>
           <button type="button" class="btn btn-primary active" disabled>
             Female
@@ -133,7 +120,7 @@
           <button type="button" class="btn btn-primary" disabled>
             Female
           </button>
-          {% endif %}
+          {% endif %} -->
           <button onclick="selectItems()" class="btn btn-primary">
             Select Items
           </button>
@@ -197,9 +184,22 @@
       </button>
     </div>
   </div>
-  <!-- Previous code in mywardrobe.html -->
+  <section class='footer'>
+    <nav class="foot">
+        <a href="contact">Contact us</a>
+        <a href="/site/terms-of-service">Terms of Service</a>
+        <a href="/site/privacy-policy">Privacy Policy</a>
+        <a href="/site/copyright">Copyright</a>
+    </nav>
+    <p class='copyright'>
+        © 2024 .Closet Canvas. All rights reserved.
+        </p>
+</section>
 
   <script>
+
+    let url= window.location.href
+    let userID = url.match(/\/male\/([^#\/]+)/);
     function toggleLeftContent() {
       // Get the element with the class 'left-content'
       var leftContent = document.querySelector(".left-content");
@@ -207,7 +207,7 @@
       // Toggle the 'slider' class on the 'left-content' element
       leftContent.classList.toggle("slider");
     }
-
+    localStorage.setItem('uid',userID);
     function nextImage(containerId) {
       const container = document.getElementById(containerId);
       container.scrollLeft += container.clientWidth;
